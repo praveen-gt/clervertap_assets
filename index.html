@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Inter", sans-serif;
+        }
+
+        .popup-body {
+            background: rgba(0, 0, 0, 0.3);
+            position: relative;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .popup-main {
+            background: #fff;
+            padding: 16px;
+            border-radius: 6.4px;
+            width: 750px;
+            display: flex;
+            position: relative;
+
+            @media only screen and (max-width: 767px) {
+                width: 300px;
+                flex-direction: column;
+                height: 550px;
+                overflow-y: auto;
+            }
+        }
+
+        .popup-image {
+            width: 50%;
+            height: 100%;
+            margin-right: 32px;
+
+            @media only screen and (max-width: 767px) {
+                width: 100%;
+                height: 200px;
+                margin-right: 0;
+            }
+        }
+
+        .popup-image img {
+            height: 100%;
+            width: 100%;
+            border-radius: 6.4px;
+        }
+
+        .popup-image img:nth-of-type(1) {
+            @media only screen and (max-width: 767px) {
+                display: none;
+            }
+        }
+
+        .popup-image img:nth-of-type(2) {
+            display: none;
+
+            @media only screen and (max-width: 767px) {
+                display: block;
+            }
+        }
+
+        .popup-form {
+            width: 50%;
+
+            @media only screen and (max-width: 767px) {
+                width: 100%;
+            }
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 0px;
+            /* border: 1px solid rgba(0, 0, 0, 0.4); */
+            border: 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.4) !important;
+            outline: rgba(0, 0, 0, 0.4);
+            border-radius: 0px;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+            /* border: 1px solid rgba(0, 0, 0, 1); */
+            outline: rgba(0, 0, 0, 1);
+        }
+
+        .form-label {
+            position: absolute;
+            left: 0px;
+            top: 0;
+            transform: translateY(10px);
+            z-index: 1;
+            background: #fff;
+            padding: 0 6px;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .form-label.active {
+            transform: translateY(-10px);
+        }
+
+        .form-group {
+            position: relative;
+            margin-top: 16px;
+        }
+
+        .cursor-pointer {
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            margin-top: 16px;
+            width: 100%;
+            padding: 10px 0;
+            text-transform: uppercase;
+            background: #000;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 6.4px;
+        }
+
+        .error {
+            display: block;
+            color: red;
+            text-align: left;
+        }
+
+        .popup-title {
+            /* font-size: 1.1rem; */
+            font-size: 1.4rem;
+            line-height: 2rem;
+            font-weight: 300;
+            /* text-align: center; */
+            margin: 1.5rem 0;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: -30px;
+            right: 0;
+            z-index: 2;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .close-success-btn {
+            border: none;
+            outline: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            background-color: #000;
+            color: #fff;
+        }
+
+        .fw-600 {
+            font-weight: 600;
+        }
+
+        .required {
+            color: red;
+        }
+
+        /* New styles for phone input with country code */
+        .phone-input-container {
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+        }
+
+        .country-code-select {
+            padding: 10px 0;
+            border: none;
+            outline: none;
+            background: transparent;
+            margin-right: 8px;
+            cursor: pointer;
+            min-width: 60px;
+        }
+
+        .country-code-select:focus {
+            outline: none;
+        }
+
+        .phone-input-field {
+            flex-grow: 1;
+            border: none !important;
+            border-bottom: none !important;
+        }
+    </style>
+</head>
+
+<body class="popup-body">
+    <div class="popup-wrapper" style="position: relative">
+        <span class="close-btn cursor-pointer" onclick="closePopup()">
+            <img src="https://img.vistarooms.com/website_assets/view_offers_close_cross.svg" alt="close-btn" height="24"
+                width="24" />
+        </span>
+        <main class="popup-main">
+            <div class="popup-image">
+                <img src="https://img.vistarooms.com/website_assets/clevertap_signup_web_popup.webp" alt="popup-img" />
+                <img src="https://img.vistarooms.com/website_assets/clevertap_signup_mobile_popup.webp"
+                    alt="popup-img" />
+            </div>
+            <div class="popup-form">
+                <p class="popup-title">You know What's Missing? Your Dream Rug!</p>
+                <p>Get Free Consultation from Our Rug Expert</p>
+                <form action="#">
+                    <div class="form-group">
+                        <input type="text" name="fullName" id="full-name" class="form-control"
+                            onfocus="fieldFocus('full-name')" onblur="fieldBlur(event,'full-name')"
+                            oninput="checkValidations(event)" required />
+                        <label for="full-name" class="form-label">Full Name <small class="required">*</small></label>
+                        <small class="error" id="full-name-error"></small>
+                    </div>
+                    <div class="form-group">
+                        <div class="phone-input-container">
+                            <select id="country-code" class="country-code-select" onchange="updateCountryCode()">
+                                <option value="+91">+91</option>
+                                <option value="+1">+1</option>
+                                <option value="+44">+44</option>
+                                <option value="+49">+49</option>
+                                <option value="+61">+61</option>
+                                <option value="+86">+86</option>
+                                <!-- Add more country codes as needed -->
+                            </select>
+                            <input type="text" name="phoneNumber" id="phone-number" class="form-control phone-input-field"
+                                onfocus="fieldFocus('phone-number')" onblur="fieldBlur(event,'phone-number')"
+                                oninput="checkValidations(event)" maxlength="10" required />
+                        </div>
+                        <label for="phone-number" class="form-label">Phone Number <small class="required">*</small></label>
+                        <small class="error" id="phone-number-error"></small>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" id="email" class="form-control" onfocus="fieldFocus('email')"
+                            onblur="fieldBlur(event,'email')" oninput="checkValidations(event)" required />
+                        <label for="email" class="form-label">Email ID <small class="required">*</small></label>
+                        <small class="error" id="email-error"></small>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" name="country" id="country" class="form-control"
+                            onfocus="fieldFocus('country')" onblur="fieldBlur(event,'country')"
+                            oninput="checkValidations(event)" required />
+                        <label for="country" class="form-label">Country <small class="required">*</small></label>
+                        <small class="error" id="country-error"></small>
+                    </div>
+
+                    <button type="button" onclick="onSubmit(event)" class="submit-btn">
+                        YES, PLEASE <span style="font-size: 20px;">›</span>
+                    </button>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let isError = true;
+        const mainPopup = document.querySelector(".popup-main");
+        const popupBody = document.querySelector(".popup-body");
+        const rawData = {};
+        let selectedCountryCode = "+91"; // Default country code
+
+        const closePopup = () => {
+            popupBody.remove();
+            const overlay =
+                window.parent.document.getElementById("intentOpacityDiv");
+            const wrapper = window.parent.document.getElementById("intentPreview");
+            if (overlay) overlay.remove();
+            if (wrapper) wrapper.remove();
+        };
+
+        const fieldFocus = (id) => {
+            const label = document.querySelector(`[for="${id}"]`);
+            label.style.transform = "translateY(-10px)";
+        };
+
+        const fieldBlur = (event, id) => {
+            if (!event?.target?.value) {
+                const label = document.querySelector(`[for="${id}"]`);
+                label.style.transform = "translateY(10px)";
+            }
+        };
+
+        const checkNumber = (event) => {
+            event.target.value = event.target.value?.replace(/[^0-9]/g, "");
+        };
+
+        const updateCountryCode = () => {
+            selectedCountryCode = document.getElementById("country-code").value;
+        };
+
+        const getFieldData = (target) => {
+            const formGroup = target?.parentNode.classList.contains("phone-input-container") ? 
+                              target?.parentNode.parentNode : target?.parentNode;
+            const id = target?.id;
+            const error = formGroup.querySelector(".error");
+            const label = formGroup.querySelector("label")?.innerText;
+            const value = target?.value;
+            return { formGroup, id, error, label, value };
+        };
+
+        const onSubmit = (event) => {
+            let isErrorInFields = false;
+            const formElements = event?.target?.form?.elements || [];
+            
+            for (let i = 0; i < formElements.length; i++) {
+                const element = formElements[i];
+                if (element.tagName === "INPUT") {
+                    const { id, error, label, value } = getFieldData(element);
+                    if (!value && id !== "country-code") {
+                        const errorElement = document.getElementById(`${id}-error`);
+                        if (errorElement) {
+                            errorElement.innerText = `${label.slice(0, -2)} is required field!`;
+                            isErrorInFields = true;
+                        }
+                    }
+                }
+            }
+
+            if (
+                rawData["full-name"] &&
+                rawData["phone-number"] &&
+                rawData["email"] &&
+                rawData["country"] &&
+                !isErrorInFields
+            ) {
+                const finalData = {
+                    Name: rawData["full-name"],
+                    Email: rawData["email"],
+                    Phone: `${selectedCountryCode}${rawData["phone-number"]}`,
+                    Identity: `${selectedCountryCode}${rawData["phone-number"]}`
+                };
+
+                console.log("final data", finalData);
+                
+                // Send data to clevertap or other services if needed
+                if (window.parent.clevertap) {
+                    window.parent.clevertap.event.push("New User Login", finalData);
+                    window.parent.clevertap.onUserLogin.push({
+                        Site: finalData,
+                    });
+                }
+
+                // Show success message
+                mainPopup.style.maxWidth = "350px";
+                mainPopup.style.flexDirection = "column";
+                mainPopup.style.alignItems = "center";
+                mainPopup.style.gap = "14px";
+                mainPopup.style.height = "auto";
+                mainPopup.innerHTML = `
+                    <div><img src="https://img.vistarooms.com/website_assets/success-tick.svg" height="36" width="36" alt="success-tick"/></div>
+                    <p class="text-center fw-600">Thank you for connecting with us!</p>
+                    <p class="text-center">We have received your details. Our rug expert will contact you shortly.</p>
+                    <button type="button" class="close-success-btn cursor-pointer" onclick="closePopup()">Close</button>
+                `;
+            }
+        };
+
+        const validateFields = (value, error, id) => {
+            const emailRegex =
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+            switch (id) {
+                case "full-name": {
+                    rawData[id] = value;
+                    break;
+                }
+                case "phone-number": {
+                    if (value?.length >= 1 && value?.length < 10) {
+                        error.innerText = "Phone Number must have 10 digits!";
+                        isError = true;
+                        rawData[id] = "";
+                    } else {
+                        rawData[id] = value;
+                    }
+                    break;
+                }
+                case "email": {
+                    if (!emailRegex.test(value)) {
+                        error.innerText = "Please enter valid email!";
+                        isError = true;
+                        rawData[id] = "";
+                    } else {
+                        rawData[id] = value;
+                    }
+                    break;
+                }
+                case "country": {
+                    rawData[id] = value;
+                    break;
+                }
+            }
+        };
+
+        const checkValidations = (event) => {
+            const target = event?.target;
+            const { id, error, label, value } = getFieldData(target);
+            
+            if (value) {
+                error.innerText = "";
+                validateFields(value, error, id);
+            } else {
+                error.innerText = `${label.slice(0, -2)} is required field!`;
+                rawData[id] = "";
+            }
+
+            if (value && id === "phone-number") {
+                checkNumber(event);
+                validateFields(value, error, id);
+            }
+        };
+    </script>
+</body>
+
+</html>
